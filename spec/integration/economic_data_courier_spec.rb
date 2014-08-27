@@ -2,14 +2,15 @@
 # 2.  For each list mneumonic pull down the codes within the list.
 # 3.  For each country mneumonic retrieve from datastream the economic measures and country information
 # 4.  Persist all the economic indicators for each country.
-require 'spec_helper.rb'
+require 'spec_helper'
 
-describe EconomicDataCourier do
-  describe "retrieving datastream data" do
-    it "should take a path to a file containing mneumonics for user economic lists" do
-      subject = EconomicDataCourier.new datastream_list_path: '../input/datastream_lists.yml'
-      expect(subject.datastream_user_lists).not_to be_empty
-    end
+describe EconView::EconomicDataCourier do
+  it "should retrieve a list of a symbols from a user list mneumonic" do
+    config = EconView::Configuration.new
+    config.datastream_username = 'test'
+    config.datastream_password = 'test'
+    courier = EconView::EconomicDataCourier.new config
+    expect(courier.retrieve_datastream_user_list('L#H19599')).to_not be_empty
   end
 end
 
