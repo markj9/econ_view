@@ -7,8 +7,8 @@ require 'spec_helper'
 describe EconView::EconomicDataCourier do
   it "should retrieve a list of a symbols from a user list mneumonic" do
     config = EconView::Configuration.new
-    config.datastream_username = 'DS:xcen905'
-    config.datastream_password = 'agency'
+    config.datastream_username = 'test'
+    config.datastream_password = 'test'
     courier = EconView::EconomicDataCourier.new(client: DatastreamClient::DatastreamClient.new(username: config.datastream_username))
     expect(courier.retrieve_datastream_user_list('L#H19599')).to_not be_empty
   end
