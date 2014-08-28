@@ -1,3 +1,4 @@
+require 'savon'
 module DatastreamClient
   class DatastreamClient
     attr_reader :username
@@ -8,7 +9,7 @@ module DatastreamClient
       @client = Savon.client(wsdl: WSDL_URL)
     end
 
-    def request_record(symbol)
+    def request_user_list(symbol)
     end
   end
 end
