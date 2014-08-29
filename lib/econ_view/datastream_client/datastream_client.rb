@@ -2,13 +2,14 @@ require 'savon'
 require_relative 'datastream_error'
 module DatastreamClient
   class DatastreamClient
+    GOOD_STATUS = "0"
     attr_reader :username, :password
     WSDL_URL = 'http://dataworks.thomson.com/Dataworks/Enterprise/1.0/webserviceclient.asmx?WSDL'
 
     def initialize(config)
       @username = config[:username]
       @password = config[:password]
-      @client = config[:client] || Savon.client(wsdl: WSDL_URL, convert_request_keys_to: :camelcase)
+      @client = config[:client] || Savon.client(wsdl: WSDL_URL, convert_request_keys_to: :camelcase, log: true)
     end
 
     def request_user_list(symbol)
@@ -42,8 +43,8 @@ module DatastreamClient
     def build_message(symbol)
       {message: {user: {username: "DS:" + @username,
                          password: @password},
-               request: {source: "datastream",
-                         instrument: "#{symbol}~LIST~#{@username}"},
+               request: {source: "Datastream",
+                         instrument: "#{symbol}~LIST~##{@username}"},
         request_flags: 0} }
     end
   end
