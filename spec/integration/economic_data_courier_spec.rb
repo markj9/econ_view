@@ -9,8 +9,11 @@ describe EconView::EconomicDataCourier do
     config = EconView::Configuration.new
     config.datastream_username = 'test'
     config.datastream_password = 'test'
-    courier = EconView::EconomicDataCourier.new(client: DatastreamClient::DatastreamClient.new(username: config.datastream_username))
-    expect(courier.retrieve_datastream_user_list('L#H19599')).to_not be_empty
+    client = DatastreamClient::DatastreamClient.new(username: config.datastream_username, password: config.datastream_password)
+    courier = EconView::EconomicDataCourier.new(client: client)
+    VCR.use_cassette('datastream') do
+      expect(courier.retrieve_datastream_user_list('L#H19599')).to_not be_empty
+    end
   end
 end
 

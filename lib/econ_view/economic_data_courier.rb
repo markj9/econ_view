@@ -4,10 +4,10 @@ module EconView
   class EconomicDataCourier
     attr_reader :datastream_client, :datastream_user_lists
 
-    def initialize(args)
+    def initialize(args = {} )
       config = {username: EconView.configuration.datastream_username }
       #@datastream_client = DatastreamClient::DatastreamClient.new config
-      @datastream_client = args[:client]
+      @datastream_client = args[:client] || DatastreamClient::DatastreamClient.new(config)
     end
 
     def retrieve_datastream_user_list(list_symbol)

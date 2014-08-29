@@ -9,13 +9,13 @@ module DatastreamClient
     def initialize(config)
       @username = config[:username]
       @password = config[:password]
-      @client = config[:client] || Savon.client(wsdl: WSDL_URL, convert_request_keys_to: :camelcase, log: true)
+      @client = config[:client] || Savon.client(wsdl: WSDL_URL, convert_request_keys_to: :camelcase, log: false)
     end
 
     def request_user_list(symbol)
       Array stats = Array.new
-      response = request_record(symbol)
-      funky_array = response.body[:request_record_response][:request_record_result][:fields][:field]
+      response = request_record(build_list_instrument(symbol))
+      funky_array = field_from(response)
       funky_array.each_slice(2) do |slice|
         if slice.size == 2
           stat = Hash.new
@@ -27,11 +27,26 @@ module DatastreamClient
       stats
     end
 
+    def request_symbol_details(symbol)
+      response = request_record(build_stat_detail_instrument(symbol))
+      details = field_from(response)
+      country = ''
+      details.each do |detail|
+        if detail[:name] == "GEOGN"
+          country = detail[:value]
+        end
+      end
+      {country: country}
+    end
 
     private
 
-    def request_record(symbol)
-      response = @client.call(:request_record, build_message(symbol))
+    def field_from(response)
+      response.body[:request_record_response][:request_record_result][:fields][:field]
+    end
+
+    def request_record(instrument)
+      response = @client.call(:request_record, build_message(instrument))
       status_code = response.body[:request_record_response][:request_record_result][:status_code]
       if status_code != "0"
        status_message = response.body[:request_record_response][:request_record_result][:status_message]
@@ -40,12 +55,20 @@ module DatastreamClient
       response
     end
 
-    def build_message(symbol)
+    def build_message(instrument)
       {message: {user: {username: "DS:" + @username,
                          password: @password},
                request: {source: "Datastream",
-                         instrument: "#{symbol}~LIST~##{@username}"},
+                         instrument: instrument},
         request_flags: 0} }
+    end
+
+    def build_list_instrument(symbol)
+      "#{symbol}~LIST~##{@username}"
+    end
+
+    def build_stat_detail_instrument(symbol)
+      "#{symbol}~REP~=GEOGN"
     end
   end
 end

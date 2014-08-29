@@ -8,4 +8,5 @@ gem 'savon', '~> 2.0'
 
 group :test do
   gem 'rspec'
+  gem 'vcr'
 end
