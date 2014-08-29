@@ -12,10 +12,10 @@ module EconView
 
     def retrieve_datastream_user_list(list_symbol)
       list = Array.new
-      symbols = @datastream_client.request_user_list(list_symbol)
-      symbols.each do |symbol|
-        symbol_details = @datastream_client.request_symbol_details(symbol[:symbol])
-        item = OpenStruct.new(symbol.merge(symbol_details))
+      econ_stats = @datastream_client.request_user_list(list_symbol)
+      econ_stats.each do |econ_stat|
+        econ_stat_details = @datastream_client.request_symbol_details(econ_stat[:symbol])
+        item = OpenStruct.new(econ_stat.merge(econ_stat_details))
         list << item
       end
       list
