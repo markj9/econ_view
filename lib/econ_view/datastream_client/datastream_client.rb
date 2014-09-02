@@ -39,11 +39,32 @@ module DatastreamClient
       {country: country}
     end
 
+    def request_stat_measurements(symbol, years_back)
+      response = request_record(build_stat_measurement_instrument(symbol, years_back))
+      field = field_from(response)
+      StatMeasurements.new(dates: array_from(field, "DATE"), values: array_from(field, "P"))
+    rescue DatastreamError => e
+      if e.message.include?("NO ECONOMIC DATA")
+        return nil
+      else
+        raise e
+      end
+    end
+
     private
 
     def field_from(response)
       response.body[:request_record_response][:request_record_result][:fields][:field]
     end
+
+    def array_from(field, name)
+      field.each do |hash_item|
+        if !hash_item[:name].nil? && hash_item[:name] == name
+          return hash_item[:array_value][:any_type]
+        end
+      end
+    end
+
 
     def request_record(instrument)
       response = @client.call(:request_record, build_message(instrument))
@@ -69,6 +90,10 @@ module DatastreamClient
 
     def build_stat_detail_instrument(symbol)
       "#{symbol}~REP~=GEOGN"
+    end
+
+    def build_stat_measurement_instrument(symbol, years_back)
+      "#{symbol}~-#{years_back}Y"
     end
   end
 end

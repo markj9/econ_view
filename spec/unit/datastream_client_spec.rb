@@ -1,4 +1,4 @@
-require 'spec_helper.rb'
+require 'spec_helper'
 require "savon/mock/spec_helper"
 require "ostruct"
 
@@ -17,51 +17,67 @@ describe DatastreamClient do
     @source = 'Datastream'
     @subject = DatastreamClient::DatastreamClient.new(username: @username, password: @password, client: @soap_client)
     @econ_stat_symbol = "AFDCPI.."
-  end
+    allow(@soap_client).to receive(:call).with(:request_record,
+                                              message: request_message(@username, @password, @source, instrument))
+                                         .and_return(response)
+ end
 
   describe "invalid status" do
+    let(:instrument) { "error~LIST~#test" }
+    let(:response) { list_response("4", "invalid request" ) }
     it "should raise a datastream error" do
-      error_message = "invalid request"
-      allow(@soap_client).to receive(:call).with(any_args()).and_return(list_response("4", error_message))
       expect{@subject.request_user_list("error")}.to raise_error(DatastreamClient::DatastreamError)
     end
   end
 
   describe "requesting a user list" do
-    before(:each) do
-      @list_symbol = 'list_symbol'
-      instrument = "#{@list_symbol}~LIST~##{@username}"
-      list_response = list_response(DatastreamClient::DatastreamClient::GOOD_STATUS, "", @econ_stat_symbol)
-      allow(@soap_client).to receive(:call).with(:request_record,
-                                                 message: request_message(@username, @password, @source, instrument))
-                                           .and_return(list_response)
-    end
-
+    let(:list_symbol) { 'list_symbol' }
+    let(:response) { list_response(DatastreamClient::DatastreamClient::GOOD_STATUS, "", @econ_stat_symbol) }
+    let(:instrument) { "#{list_symbol}~LIST~##{@username}" }
     it "should request a user list" do
       expect(@soap_client).to receive(:call)
-      @subject.request_user_list(@list_symbol)
+      @subject.request_user_list(list_symbol)
     end
 
     it "should return an array of hashes containing econ statistics" do
-      econ_stats = @subject.request_user_list(@list_symbol)
+      econ_stats = @subject.request_user_list(list_symbol)
       expect(econ_stats[0][:symbol]).to eq(@econ_stat_symbol)
     end
 
   end
 
   describe "requesting an econ stat's details " do
-    before(:each) do
-      instrument = "#{@econ_stat_symbol}~REP~=GEOGN"
-      @country = "AFGHANISTAN"
-      response = stat_detail_response(@econ_stat_symbol, @country)
-      allow(@soap_client).to receive(:call).with(:request_record,
-                                                 message: request_message(@username, @password, @source, instrument))
-                                           .and_return(response)
-    end
-
+    let(:country) { "AFGHANISTAN" }
+    let(:response) { stat_detail_response(@econ_stat_symbol, country) }
+    let(:instrument) {"#{@econ_stat_symbol}~REP~=GEOGN" }
     it "should obtain the country the stat is for" do
       econ_stat_details = @subject.request_symbol_details(@econ_stat_symbol)
-      expect(econ_stat_details[:country]).to eq(@country)
+      expect(econ_stat_details[:country]).to eq(country)
+    end
+  end
+
+  describe "requesting an econ stat's values" do
+    let(:years_back) { 3 }
+    let(:response) { stat_measurement_response() }
+    let(:instrument) {"#{@econ_stat_symbol}~-#{years_back}Y" }
+    it "should return the most recent measurement value" do
+      econ_stat_measurements = @subject.request_stat_measurements(@econ_stat_symbol, years_back)
+      expect(econ_stat_measurements.most_recent_value).to eq("NaN")
+    end
+
+    describe "handling an error for no econ data" do
+      let(:response) { list_response("2", "$$\"ER\", 0628, MBDCPI..  NO ECONOMIC DATA") }
+      it "should return nil when the message is has no econ data" do
+        econ_stat_measurements = @subject.request_stat_measurements(@econ_stat_symbol, years_back)
+        expect(econ_stat_measurements).to be_nil()
+      end
+    end
+
+    describe "handling an error for invalid request" do
+      let(:response) { list_response("4", "invalid request" ) }
+      it "should throw a DatastreamError if not a No Economic Data message" do
+        expect{ @subject.request_stat_measurements(@econ_stat_symbol, years_back) }.to raise_error(DatastreamClient::DatastreamError)
+      end
     end
 
   end
@@ -78,6 +94,22 @@ describe DatastreamClient do
           # <DateTime: 2014-08-28T00:00:00+00:00 ((2456898j,0s,0n),+0s,2299161j)>},
              {:name=>"GEOGN", :value=> country },
              {:name=>"SYMBOL", :value=>"AFDCPI.."}]
+    generic_response(field)
+  end
+
+  def stat_measurement_response()
+    field = [{:name=>"CCY", :value=>{:"@xsi:type"=>"xsd:string"}},
+    {:name=>"DATE", :array_value=>
+      {:any_type=>[DateTime.parse('2011-06-30T00:00:00+00:00'),
+             DateTime.parse('2012-06-30T00:00:00+00:00'),
+             DateTime.parse('2013-06-30T00:00:00+00:00'),
+             DateTime.parse('2014-06-30T00:00:00+00:00')]
+      }
+    },
+    {:name=>"DISPNAME", :value=>"AF CONSUMER PRICES (% CHANGE, AV) NADJ"},
+    {:name=>"FREQUENCY", :value=>"Y"},
+    {:name=>"P", :array_value=>{:any_type=>["10.2", "7.23", "7.65", "NaN"]}},
+    {:name=>"SYMBOL", :value=>"AFDCPI.."}]
     generic_response(field)
   end
 
