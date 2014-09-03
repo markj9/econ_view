@@ -5,9 +5,7 @@ module EconView
     attr_reader :datastream_client, :datastream_user_lists
 
     def initialize(args = {} )
-      config = {username: EconView.configuration.datastream_username }
-      #@datastream_client = DatastreamClient::DatastreamClient.new config
-      @datastream_client = args[:client] || DatastreamClient::DatastreamClient.new(config)
+      @datastream_client = args[:client]
     end
 
     def retrieve_datastream_user_list(list_symbol, years_back=3)

@@ -8,9 +8,7 @@ require 'spec_helper'
 
 describe EconView::EconomicDataCourier do
   it "should retrieve a list of country specific mnemonics for an economic measure from a user list mnemonic" do
-    config = EconView::Configuration.new
-    config.datastream_username = 'test'
-    config.datastream_password = 'test'
+    config = EconView::Configuration.new config_path: 'lib/config/config.yml'
     client = DatastreamClient::DatastreamClient.new(username: config.datastream_username, password: config.datastream_password)
     courier = EconView::EconomicDataCourier.new(client: client)
     VCR.use_cassette('datastream') do
