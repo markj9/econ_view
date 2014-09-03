@@ -1,3 +1,13 @@
 datastream_username: 'admin'
 datastream_password: 'admin'
-
+economic_indicators:
+  cpi:
+    high: 19
+    low: -20
+    code: 'L#H19599'
+    json_name: 'CPI'
+  cab:
+    high: 'NA'
+    low: -12
+    code: 'L#H19600'
+    json_name: 'CAB'

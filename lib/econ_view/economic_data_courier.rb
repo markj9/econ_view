@@ -2,7 +2,7 @@ require_relative 'datastream_client/datastream_client'
 require 'ostruct'
 module EconView
   class EconomicDataCourier
-    attr_reader :datastream_client, :datastream_user_lists
+    attr_reader :datastream_client
 
     def initialize(args = {} )
       @datastream_client = args[:client]
