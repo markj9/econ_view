@@ -4,10 +4,40 @@ economic_indicators:
   cpi:
     high: 19
     low: -20
-    code: 'L#H19599'
-    json_name: 'CPI'
+    code: 'l#h19599'
+    json_name: 'cpi'
   cab:
-    high: 'NA'
+    high: 'na'
     low: -12
-    code: 'L#H19600'
-    json_name: 'CAB'
+    code: 'l#h19600'
+    json_name: 'cab'
+  fiscal:
+    high: 'na'
+    low: -11
+    code: 'l#h19601'
+    json_name: 'fb'
+  fximports:
+    high: 'na'
+    low: 2
+    code: 'l#h19602'
+    json_name: 'fximports'
+  fxdebt: 
+    high: 'na'
+    low: 64
+    code: 'l#h19603'
+    json_name: 'fxdebt'
+  credit:
+    high: 39
+    low: -14
+    code: 'l#h19604'
+    json_name: 'rdcg'
+  gdp:
+    high: 11
+    low: 0
+    code: 'l#h19605'
+    json_name: 'realgdp'
+  interestrate:
+    high: 24
+    low: -10
+    code: 'l#h19606'
+    json_name: 'RealSTlR'   json_name: 'CAB'

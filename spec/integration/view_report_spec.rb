@@ -11,8 +11,8 @@ describe ViewReport do
     config = Configuration.new config_path: 'lib/config/config.yml'
     client = DatastreamClient::DatastreamClient.new(username: config.datastream_username, password: config.datastream_password)
     courier = EconomicDataCourier.new(client: client)
-    indicators = EconomicIndicator.create(config.economic_indicators)
-    report = ViewReport.new(courier: courier, economic_indicators: indicators)
+    indicators = EconomicIndicator.create(courier: courier, config: config.economic_indicators)
+    report = ViewReport.new(economic_indicators: indicators)
     VCR.use_cassette('datastream') do
       expect(report.to_json).to include("\"RiskScore\": 5")
     end
