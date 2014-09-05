@@ -47,6 +47,7 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.0)
+    multi_json (1.10.1)
     net-http-persistent (1.9)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
@@ -90,6 +91,10 @@ GEM
       rdf (~> 1.1, >= 1.1.4)
     rdf-xsd (1.1.1)
       rdf (~> 1.1)
+    representable (2.0.4)
+      multi_json
+      nokogiri
+      uber (~> 0.0.7)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -127,6 +132,7 @@ GEM
     sxp (0.1.5)
     systemu (2.6.4)
     tilt (2.0.1)
+    uber (0.0.8)
     uuid (2.3.7)
       macaddr (~> 1.0)
     vcr (2.9.2)
@@ -145,6 +151,7 @@ DEPENDENCIES
   linkeddata
   pry
   rdf
+  representable
   rspec
   savon (~> 2.0)
   vcr

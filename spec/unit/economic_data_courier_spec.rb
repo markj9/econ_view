@@ -31,4 +31,20 @@ describe EconView::EconomicDataCourier do
       expect(user_list[:afghanistan].most_recent_value).to eq('8.0')
     end
   end
+
+  describe "retrieving a user list with an invalid item in the list" do
+    before :each do
+      @client = double("datastream_client")
+      @list_symbol = 'list'
+      allow(@client).to receive(:request_user_list).with(@list_symbol).and_return([{symbol: "AFGCPI", description: "AFG CPI"}])
+      allow(@client).to receive(:request_symbol_details).with("AFGCPI").and_raise(DatastreamClient::DatastreamError.new("Some Error"))
+      allow(@client).to receive(:request_stat_measurements).with("AFGCPI", 3)
+    end
+
+    it "should swallow the error FOR NOW!!" do
+      subject = EconView::EconomicDataCourier.new(client: @client)
+      user_list = subject.retrieve_datastream_user_list(@list_symbol)
+      expect(user_list[:afghanistan]).to be_nil
+    end
+  end
 end

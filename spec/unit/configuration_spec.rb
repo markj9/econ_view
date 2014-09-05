@@ -11,7 +11,7 @@ module EconView
     end
 
     it "should have a hash of economic indicators" do
-      expect(@config.economic_indicators.size).to eq(2)
+      expect(@config.economic_indicators.size).to eq(8)
     end
 
     it "should have a code for each economi_indicator" do

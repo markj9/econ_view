@@ -12,9 +12,12 @@ describe ViewReport do
     client = DatastreamClient::DatastreamClient.new(username: config.datastream_username, password: config.datastream_password)
     courier = EconomicDataCourier.new(client: client)
     indicators = EconomicIndicator.create(courier: courier, config: config.economic_indicators)
-    report = ViewReport.new(economic_indicators: indicators)
     VCR.use_cassette('datastream') do
-      expect(report.to_json).to include("\"RiskScore\": 5")
+      report = ViewReport.new(economic_indicators: indicators)
+      report.extend(ViewReportRepresenter)
+      report.build
+      json = report.to_json
+      expect(json).to include("\"RiskScore\":5")
     end
   end
 end
