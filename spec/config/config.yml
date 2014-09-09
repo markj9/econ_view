@@ -1,43 +1,44 @@
 datastream_username: 'admin'
 datastream_password: 'admin'
+user_lists:
+  - 'L#H19599'
+  - 'L#H19600'
+  - 'L#H19601'
+  - 'L#H19602'
+  - 'L#H19603'
+  - 'L#H19604'
+  - 'L#H19605'
+  - 'L#H19606'
 economic_indicators:
   cpi:
     high: 19
     low: -20
-    code: 'L#H19599'
-    json_name: 'cpi'
+    json_name: 'CPI'
   cab:
-    high: 'na'
+    high: 'NA'
     low: -12
-    code: 'L#H19600'
-    json_name: 'cab'
+    json_name: 'CAB'
   fiscal:
-    high: 'na'
+    high: 'NA'
     low: -11
-    code: 'L#H19601'
-    json_name: 'fb'
+    json_name: 'FB'
   fximports:
-    high: 'na'
+    high: 'NA'
     low: 2
-    code: 'L#H19602'
-    json_name: 'fximports'
+    json_name: 'FXImports'
   fxdebt: 
-    high: 'na'
+    high: 'NA'
     low: 64
-    code: 'L#H19603'
-    json_name: 'fxdebt'
+    json_name: 'FXDebt'
   credit:
     high: 39
     low: -14
-    code: 'L#H19604'
-    json_name: 'rdcg'
+    json_name: 'RDCG'
   gdp:
     high: 11
     low: 0
-    code: 'L#H19605'
-    json_name: 'realgdp'
+    json_name: 'RealGDP'
   interestrate:
     high: 24
     low: -10
-    code: 'L#H19606'
-    json_name: 'RealSTlR'
+    json_name: 'RealSTLR'

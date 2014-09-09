@@ -14,8 +14,8 @@ module EconView
       expect(@config.economic_indicators.size).to eq(8)
     end
 
-    it "should have a code for each economi_indicator" do
-      expect(@config.economic_indicators[:cpi][:code]).to eql("L#H19599")
+    it "should have an array of user lists" do
+      expect(@config.user_lists.size).to eq(8)
     end
   end
 end
