@@ -10,7 +10,7 @@ describe ViewReport do
   it "should generate JSON with a risk score" do
     config = Configuration.new config_path: 'lib/config/config.yml'
     client = DatastreamClient::DatastreamClient.new(username: config.datastream_username, password: config.datastream_password)
-    courier = EconomicDataCourier.new(client: client)
+    courier = EconomicDataCourier.new(client: client, user_lists: config.user_lists)
     indicators = EconomicIndicator.create(courier: courier, config: config.economic_indicators)
     VCR.use_cassette('datastream') do
       report = ViewReport.new(economic_indicators: indicators)

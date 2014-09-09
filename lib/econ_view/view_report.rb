@@ -4,8 +4,6 @@ module EconView
     def initialize(args)
       @countries = []
       @economic_indicators = args[:economic_indicators]
-      args[:economic_indicators].each {|i| @countries << i.countries }
-      @countries.flatten!.uniq!.sort!
     end
 
     def build

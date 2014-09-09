@@ -43,12 +43,6 @@ module DatastreamClient
       response = request_record(build_stat_measurement_instrument(symbol, years_back))
       field = field_from(response)
       StatMeasurements.new(dates: array_from(field, "DATE"), values: array_from(field, "P"))
-    rescue DatastreamError => e
-      if e.message.include?("NO ECONOMIC DATA")
-        return nil
-      else
-        raise e
-      end
     end
 
     private

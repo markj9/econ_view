@@ -1,6 +1,6 @@
 class EconomicIndicator
 
-  attr_accessor :name, :high, :low, :code, :json_name, :courier, :countries, :measurements
+  attr_accessor :name, :high, :low, :code, :json_name, :courier
   OUTSIDE_THRESHOLD = 1.0
   INSIDE_THRESHOLD = 0.0
 
@@ -19,38 +19,26 @@ class EconomicIndicator
     args[:attrs].each {|k,v| send("#{k}=",v)}
   end
 
-  def measurements
-    if @measurements.nil? && (!@code.nil? || !@courier.nil?)
-      @measurements = @courier.retrieve_datastream_user_list(@code)
-    end
-    @measurements
-  end
-
-  def countries
-    measurements.keys
-  end
-
-  def within_threshold?(country)
-    if (!high.nil? && !high.is_a?(String) && measurements[country].most_recent_value.to_f > high) ||
-      (!low.nil? && !low.is_a?(String)  && measurements[country].most_recent_value.to_f < low)
+  def within_threshold?(value)
+    if (!high.nil? && !high.is_a?(String) && value > high) ||
+      (!low.nil? && !low.is_a?(String)  && value < low)
       return false
     end
     true
-  rescue ArgumentError
-    binding.pry
   end
 
-  def measurements_for(country)
-    if measurements[country].nil? || measurements[country].most_recent_value.nil? ||
-      measurements[country].most_recent_value == "NaN"
+  def threshold_value_for(country)
+    measurement = courier.measurement_for(code, country)
+    if measurement.nil? || measurement.most_recent_value.nil? ||
+      measurement.most_recent_value == "NaN"
       return {}
     end
     name_string = name.to_s.upcase
-    if within_threshold?(country)
+    if within_threshold?(measurement.most_recent_value)
       result = {"SumOf#{json_name}" => INSIDE_THRESHOLD}
     else
       result = {"SumOf#{json_name}" => OUTSIDE_THRESHOLD}
     end
-    {json_name => measurements[country].most_recent_value.to_f}.merge(result)
+    {json_name => measurement.most_recent_value.to_f}.merge(result)
   end
 end
