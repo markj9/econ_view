@@ -28,5 +28,13 @@ describe EconomicDataCourier do
       end
     end
   end
+
+  it "should have a deduped list of countries from its measurements" do
+    measurements = {cpi: {:afghanistan => {}},
+                    cada: {:afghanistan => {}},
+                    test: {:usa => {}}}
+    subject = EconomicDataCourier.new(measurements: measurements)
+    expect(subject.countries).to eq([:afghanistan, :usa])
+  end
 end
 end

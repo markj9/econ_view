@@ -1,3 +1,4 @@
+module EconView
 class EconomicIndicator
 
   attr_accessor :name, :high, :low, :code, :json_name, :courier
@@ -7,7 +8,12 @@ class EconomicIndicator
   def self.create(args)
     indicators = []
     args[:config].each do |key, value|
-      i = EconomicIndicator.new(name: key, attrs: value)
+      class_name = value.delete(:class_name)
+      if class_name.nil?
+        i = EconomicIndicator.new(name: key, attrs: value)
+      else
+        i = Object.const_get(class_name).new(name: key, attrs: value)
+      end
       i.courier = args[:courier]
       indicators << i
     end
@@ -28,17 +34,24 @@ class EconomicIndicator
   end
 
   def threshold_value_for(country)
-    measurement = courier.measurement_for(code, country)
-    if measurement.nil? || measurement.most_recent_value.nil? ||
-      measurement.most_recent_value == "NaN"
-      return {}
-    end
+    value = compute_value(country)
+    return {} unless !value.nil?
     name_string = name.to_s.upcase
-    if within_threshold?(measurement.most_recent_value)
+    if within_threshold?(value)
       result = {"SumOf#{json_name}" => INSIDE_THRESHOLD}
     else
       result = {"SumOf#{json_name}" => OUTSIDE_THRESHOLD}
     end
-    {json_name => measurement.most_recent_value.to_f}.merge(result)
+    {json_name => value}.merge(result)
   end
+
+  def compute_value(country)
+    measurement = courier.measurement_for(code,country)
+    if measurement.nil? || measurement.most_recent_value.nil? ||
+      measurement.most_recent_value == "NaN"
+      return nil
+    end
+    measurement.most_recent_value.to_f
+  end
+end
 end

@@ -14,18 +14,22 @@ economic_indicators:
     high: 19
     low: -20
     json_name: 'CPI'
+    code: 'DCPI..'
   cab:
     high: 'NA'
     low: -12
     json_name: 'CAB'
+    code: 'CARA..'
   fiscal:
     high: 'NA'
     low: -11
     json_name: 'FB'
+    code: 'PSBR..'
   fximports:
     high: 'NA'
     low: 2
     json_name: 'FXImports'
+    code: 'MCOV..'
   fxdebt: 
     high: 'NA'
     low: 64
@@ -34,11 +38,14 @@ economic_indicators:
     high: 39
     low: -14
     json_name: 'RDCG'
+    code: 'SODD..'
   gdp:
     high: 11
     low: 0
     json_name: 'RealGDP'
+    code: 'DGDP'
   interestrate:
     high: 24
     low: -10
     json_name: 'RealSTLR'
+    code: 'LRAT..'
