@@ -15,6 +15,11 @@ module EconView
       expect(indicators[0].is_a?(EconView::FXDebtIndicator)).to be_truthy
     end
 
+    it "should convert code strings to lowercase symbols" do
+      indicator = EconomicIndicator.new(name: :cpi, attrs: {code: "TSTD.."})
+      expect(indicator.code).to eql(:"tstd..")
+    end
+
     it "should have a threshold hash for a country which includes threshold" do
         @courier = double('courier')
         expect(@courier).to receive(:measurement_for).with(:cpi, :usa).

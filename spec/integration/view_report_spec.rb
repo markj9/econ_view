@@ -17,7 +17,6 @@ describe ViewReport do
       report.extend(ViewReportRepresenter)
       report.build
       json = report.to_json
-      binding.pry
       #expect(json).to include("\"RiskScore\":5")
       expect(json).not_to be_nil
     end

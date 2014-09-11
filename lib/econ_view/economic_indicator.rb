@@ -25,6 +25,14 @@ class EconomicIndicator
     args[:attrs].each {|k,v| send("#{k}=",v)}
   end
 
+  def code=(code)
+    if code.is_a?String
+      @code= code.downcase.to_sym
+    else
+      @code = code
+    end
+  end
+
   def within_threshold?(value)
     if (!high.nil? && !high.is_a?(String) && value > high) ||
       (!low.nil? && !low.is_a?(String)  && value < low)
