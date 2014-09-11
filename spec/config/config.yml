@@ -33,19 +33,20 @@ economic_indicators:
   fxdebt: 
     high: 'NA'
     low: 64
+    class_name: 'EconView::FXDebtIndicator'
     json_name: 'FXDebt'
   credit:
     high: 39
     low: -14
+    class_name: 'EconView::RDCGIndicator'
     json_name: 'RDCG'
-    code: 'SODD..'
   gdp:
     high: 11
     low: 0
     json_name: 'RealGDP'
-    code: 'DGDP'
+    code: 'DGDP..'
   interestrate:
     high: 24
     low: -10
+    class_name: 'EconView::STLRIndicator'
     json_name: 'RealSTLR'
-    code: 'LRAT..'
