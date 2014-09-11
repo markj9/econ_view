@@ -1,5 +1,5 @@
-require "econ_view/economic_data_courier"
-require "econ_view/configuration"
+#require "econ_view/economic_data_courier"
+#require "econ_view/configuration"
 module EconView
 #  class << self
 #    attr_writer :configuration

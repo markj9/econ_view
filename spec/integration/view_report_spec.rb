@@ -15,11 +15,8 @@ describe ViewReport do
       courier = EconomicDataCourier.new(client: client, user_lists: config.user_lists)
       indicators = EconomicIndicator.create(courier: courier, config: config.economic_indicators)
       report = ViewReport.new(courier: courier, economic_indicators: indicators)
-      report.extend(ViewReportRepresenter)
-      report.build
-      json = report.to_json
-      expect(json).not_to be_nil
-      json_hash = JSON.parse(json)
+      presenter = ViewReportRepresenter.new(report)
+      json_hash = JSON.parse(presenter.to_json)
       venezuela_row = extract_row_for(json_hash, "Venezuela")
       expect(venezuela_row).to include(venezuela_expected_result)
     end

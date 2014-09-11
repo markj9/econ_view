@@ -19,11 +19,10 @@ module EconView
       expect(cab).to receive(:json_name).and_return("CAB")
       expect(cab).to receive(:threshold_value_for).with(:usa).and_return({"CAB" => 5, "SumOfCAB" => 1.0})
       report = ViewReport.new(courier: courier, economic_indicators: [cpi, cab])
-      report.extend(ViewReportRepresenter)
-      report.build
-      json = JSON.parse(report.to_json)
+      presenter = ViewReportRepresenter.new(report)
+      json = JSON.parse(presenter.to_json)
       correct_result = <<END
-                  {"country_list": [{"CPI":  64.1, "SumOfCPI": 1.0, "CAB": 5, "SumOfCAB": 1.0,
+{"name": "ViEWCountrySet", "TimePeriod": 2014, "country_list": [{"CPI":  64.1, "SumOfCPI": 1.0, "CAB": 5, "SumOfCAB": 1.0,
                                             "CountryName": "Usa", "RiskScore": 2}] }
 END
      expect(json).to eql(JSON.parse(correct_result))

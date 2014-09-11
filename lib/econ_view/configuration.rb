@@ -1,3 +1,5 @@
+require 'erb'
+require 'yaml'
 module EconView
   class Configuration
     attr_accessor :datastream_username, :datastream_password, :economic_indicators, :user_lists
