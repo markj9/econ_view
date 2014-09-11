@@ -1,2 +1,3 @@
 lib/config/config.yml
+log/vcr.log
 spec/fixtures/vcr_cassettes/datastream.yml
