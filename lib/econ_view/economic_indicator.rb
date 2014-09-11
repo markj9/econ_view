@@ -4,6 +4,7 @@ class EconomicIndicator
   attr_accessor :name, :high, :low, :code, :json_name, :courier
   OUTSIDE_THRESHOLD = 1.0
   INSIDE_THRESHOLD = 0.0
+  CPI = :"dcpi.."
 
   def self.create(args)
     indicators = []
@@ -55,11 +56,18 @@ class EconomicIndicator
 
   def compute_value(country)
     measurement = courier.measurement_for(code,country)
+    return nil if !valid_measurement?(measurement)
+    measurement.most_recent_value.to_f
+  end
+
+  private
+
+  def valid_measurement?(measurement)
     if measurement.nil? || measurement.most_recent_value.nil? ||
       measurement.most_recent_value == "NaN"
-      return nil
+      return false
     end
-    measurement.most_recent_value.to_f
+    true
   end
 end
 end

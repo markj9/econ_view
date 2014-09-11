@@ -12,6 +12,21 @@ module EconView
       @user_lists.each {|list| retrieve_datastream_user_list(list) }
     end
 
+    def countries
+      all_countries = []
+      @measurements.each_value{|v| all_countries << v.keys}
+      all_countries.flatten.uniq.sort
+    end
+
+    def measurement_for(code, country)
+      if @measurements[code] && @measurements[code][country]
+        return @measurements[code][country]
+      end
+      EconomicMeasurement.new(:most_recent_value => nil)
+    end
+
+    private
+
     def retrieve_datastream_user_list(list_symbol, years_back=3)
       econ_stats = @datastream_client.request_user_list(list_symbol)
       econ_stats.each do |econ_stat|
@@ -31,44 +46,5 @@ module EconView
         end
       end
     end
-
-    def countries
-      all_countries = []
-      @measurements.each_value{|v| all_countries << v.keys}
-      all_countries.flatten.uniq.sort
-    end
-
-    def measurement_for(code, country)
-      if @measurements[code] && @measurements[code][country]
-        return @measurements[code][country]
-      end
-      EconomicMeasurement.new(:most_recent_value => nil)
-    end
-
-#    def measurements
-#      if @measurements.nil? && (!@code.nil? || !@courier.nil?)
-#        @measurements = @courier.retrieve_datastream_user_list(@code)
-#      end
-#      @measurements
-#    end
-#
-#    def countries
-#      measurements.keys
-#    end
-#
-#
-#    def measurements_for(country)
-#      if measurements[country].nil? || measurements[country].most_recent_value.nil? ||
-#        measurements[country].most_recent_value == "NaN"
-#        return {}
-#      end
-#      name_string = name.to_s.upcase
-#      if within_threshold?(country)
-#        result = {"SumOf#{json_name}" => INSIDE_THRESHOLD}
-#      else
-#        result = {"SumOf#{json_name}" => OUTSIDE_THRESHOLD}
-#      end
-#      {json_name => measurements[country].most_recent_value.to_f}.merge(result)
-#    end
   end
 end

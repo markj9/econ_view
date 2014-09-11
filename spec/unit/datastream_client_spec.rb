@@ -65,13 +65,13 @@ describe DatastreamClient do
       expect(econ_stat_measurements.most_recent_value).to eq("NaN")
     end
 
-    describe "handling an error for no econ data" do
-      let(:response) { list_response("2", "$$\"ER\", 0628, MBDCPI..  NO ECONOMIC DATA") }
-      it "should return nil when the message is has no econ data" do
-        econ_stat_measurements = @subject.request_stat_measurements(@econ_stat_symbol, years_back)
-        expect(econ_stat_measurements).to be_nil()
-      end
-    end
+#    describe "handling an error for no econ data" do
+#      let(:response) { list_response("2", "$$\"ER\", 0628, MBDCPI..  NO ECONOMIC DATA") }
+#      it "should return nil when the message is has no econ data" do
+#        econ_stat_measurements = @subject.request_stat_measurements(@econ_stat_symbol, years_back)
+#        expect(econ_stat_measurements).to be_nil()
+#      end
+#    end
 
     describe "handling an error for invalid request" do
       let(:response) { list_response("4", "invalid request" ) }
