@@ -2,7 +2,7 @@ require 'erb'
 require 'yaml'
 module EconView
   class Configuration
-    attr_accessor :datastream_username, :datastream_password, :economic_indicators, :user_lists
+    attr_accessor :datastream_username, :datastream_password, :economic_indicators, :user_lists, :year
 
     def initialize(args)
       config_path = args[:config_path]
@@ -11,6 +11,7 @@ module EconView
       @datastream_password = config['datastream_password']
       @economic_indicators = symbolize(config['economic_indicators'])
       @user_lists = config['user_lists']
+      @year = config['year']
     end
 
 

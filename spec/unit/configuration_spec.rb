@@ -17,5 +17,9 @@ module EconView
     it "should have an array of user lists" do
       expect(@config.user_lists.size).to eq(8)
     end
+
+    it "should have a year" do
+      expect(@config.year).to eq(2015)
+    end
   end
 end

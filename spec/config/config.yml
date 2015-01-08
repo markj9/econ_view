@@ -1,5 +1,6 @@
 datastream_username: 'admin'
 datastream_password: 'admin'
+year: 2015
 user_lists:
   - 'L#H19599'
   - 'L#H19600'
